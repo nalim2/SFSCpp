@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor
  * Method:    initNative
- * Signature: (Ljava/lang/Class;Ljava/lang/Class;)J
+ * Signature: (Ljava/lang/Class;Lde/unistuttgart/isw/sfsc/commonjava/zmq/reactor/jni/ShutdownHandler;)J
  */
 JNIEXPORT jlong JNICALL Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_initNative
-  (JNIEnv *, jclass, jclass, jclass);
+  (JNIEnv *, jclass, jclass, jobject);
 
 /*
  * Class:     de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor

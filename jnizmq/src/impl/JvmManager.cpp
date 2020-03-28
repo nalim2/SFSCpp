@@ -4,9 +4,9 @@ namespace JvmStore {
     JavaVM *vm;
     jclass byteArrayClass;
     jclass inboxClass;
-    jclass exceptionCallbackClass;
     jmethodID inboxMethod;
-    jmethodID exceptionCallbackMethod;
+    jclass shutdownHandlerClass;
+    jmethodID shutdownHandlerMethod;
 }
 
 JNIEnv *JvmManager::attachThread() {

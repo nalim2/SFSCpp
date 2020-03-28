@@ -5,15 +5,15 @@
 
 JNIEXPORT jlong JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_initNative
-        (JNIEnv *env, jclass, jclass inboxClass, jclass exceptionCallbackClass) {
+        (JNIEnv *env, jclass, jclass inboxClass, jobject shutdownHandler) {
     env->GetJavaVM(&JvmStore::vm);
     jclass byteArrayClass = env->FindClass("[B"); //todo nullchecks for jnizmq stuff needed?
     JvmStore::byteArrayClass = (jclass) env->NewGlobalRef(byteArrayClass);
     JvmStore::inboxClass = (jclass) env->NewGlobalRef(inboxClass);
-    JvmStore::exceptionCallbackClass = (jclass) env->NewGlobalRef(exceptionCallbackClass);
     JvmStore::inboxMethod = env->GetMethodID(inboxClass, "addInboxMessage", "([[B)V");
-    JvmStore::exceptionCallbackMethod = env->GetMethodID(exceptionCallbackClass, "nativeException", "()V");
-    ZmqExecutor *executor = ZmqExecutor::create();
+    JvmStore::shutdownHandlerClass = (jclass) env->NewGlobalRef(env->GetObjectClass(shutdownHandler));
+    JvmStore::shutdownHandlerMethod = env->GetMethodID(JvmStore::shutdownHandlerClass, "shutdownEvent", "()V");
+    ZmqExecutor *executor = ZmqExecutor::create(); //todo use shutdwonHandler
     return (long) executor;
 }
 
