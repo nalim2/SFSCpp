@@ -10,14 +10,18 @@ void ZmqExecutor::CommandExecutor::start() {
         loop.add(notificationReceiver, [&]() -> bool {
             try {
                 notificationReceiver.receive(notificationThrowaway);
-                executor.taskQueue.execute(); //todo catch exception from function?
+                executor.taskQueue.execute();
                 return true;
             }
             catch (zmqpp::zmq_internal_exception &e) {
                 if (e.zmq_error() != ETERM) {
-                    std::cerr << "unexpected exception" << e.what() << std::endl;
+                    std::cerr << "unexpected exception " << e.zmq_error() << " " << e.what() << std::endl;
                     executor.close();
                 }
+                return false;
+            }
+            catch (std::exception &e) {
+                std::cerr << "unexpected exception from task " << e.what() << std::endl;
                 return false;
             }
         });
@@ -26,11 +30,12 @@ void ZmqExecutor::CommandExecutor::start() {
             loop.start();
         } catch (zmqpp::zmq_internal_exception &e) {
             if (e.zmq_error() != ETERM) {
-                std::cerr << "unexpected exception" << e.what() << std::endl;
+                std::cerr << "unexpected exception " << e.zmq_error() << " " << e.what() << std::endl;
                 executor.close();
             }
         }
         notificationReceiver.close();
+        std::cout << "loop stopped" << std::endl;
     }).detach();
 }
 
@@ -73,13 +78,14 @@ void ZmqExecutor::NotificationInjector::start() {
                             break;
                         } catch (zmqpp::zmq_internal_exception &e) {
                             if (e.zmq_error() != ETERM) {
-                                std::cerr << "unexpected exception" << e.what() << std::endl;
+                                std::cerr << "unexpected exception " << e.zmq_error() << e.what() << std::endl;
                                 executor.close();
                             }
                             break;
                         }
                     }
                     notificationSender.close();
+                    std::cout << "notification thread stopped" << std::endl;
                 }
     ).detach();
 }
@@ -122,9 +128,6 @@ void ZmqExecutor::close() {
             commandExecutorNotifier.close();
             notificationInjectorNotifier.close();
             context.terminate();
-            std::cout << "executor closed" << std::endl;
         }).detach();
     }
 }
-
-
