@@ -20,7 +20,6 @@ public:
         jobjectArray outer = env->NewObjectArray(outerLength, JvmStore::byteArrayClass, nullptr);
         for (int i = 0; i < outerLength; i++) {
             int innerLength = message->size(i);
-            message->get(i);
             jbyteArray inner = env->NewByteArray(innerLength);
             env->SetByteArrayRegion(inner, 0, innerLength, (jbyte *) message->raw_data(i));
             env->SetObjectArrayElement(outer, i, inner);
