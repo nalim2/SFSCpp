@@ -47,21 +47,24 @@ private:
     Notifier taskNotifier;
     Notifier commandExecutorNotifier;
     Notifier notificationInjectorNotifier;
+    Notifier closeNotifier;
     CommandExecutor commandExecutor = CommandExecutor(*this);
     NotificationInjector notificationInjector = NotificationInjector(*this);
+
+    ZmqExecutor() = default;
 
     void start();
 
     void inject(std::function<void()> *task);
 
-    ZmqExecutor() = default;
+    void initClose();
 
-    void close();
+    void awaitClosed();
 
 public:
     static ZmqExecutor *create();
 
-    void injectionTest(std::function<void()> *task);
+    void injectionTest(std::function<void()> *task); //todo rename method
 
     std::future<Socket *> createPublisher(std::shared_ptr<Inbox> inbox);
 
@@ -69,9 +72,7 @@ public:
 
 //    void addShutdownListener(); todo instead call java executeAll sth
 
-    ~ZmqExecutor() {
-        close();
-    }
+    ~ZmqExecutor();
 };
 
 #endif //ZMQLOOPLIB_ZMQEXECUTOR_H

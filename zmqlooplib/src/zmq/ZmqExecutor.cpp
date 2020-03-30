@@ -16,7 +16,7 @@ void ZmqExecutor::CommandExecutor::start() {
             catch (zmqpp::zmq_internal_exception &e) {
                 if (e.zmq_error() != ETERM) {
                     std::cerr << "unexpected exception " << e.zmq_error() << " " << e.what() << std::endl;
-                    executor.close();
+                    executor.initClose();
                 }
                 return false;
             }
@@ -31,7 +31,7 @@ void ZmqExecutor::CommandExecutor::start() {
         } catch (zmqpp::zmq_internal_exception &e) {
             if (e.zmq_error() != ETERM) {
                 std::cerr << "unexpected exception " << e.zmq_error() << " " << e.what() << std::endl;
-                executor.close();
+                executor.initClose();
             }
         }
         notificationReceiver.close();
@@ -79,7 +79,7 @@ void ZmqExecutor::NotificationInjector::start() {
                         } catch (zmqpp::zmq_internal_exception &e) {
                             if (e.zmq_error() != ETERM) {
                                 std::cerr << "unexpected exception " << e.zmq_error() << e.what() << std::endl;
-                                executor.close();
+                                executor.initClose();
                             }
                             break;
                         }
@@ -120,7 +120,7 @@ std::future<Socket *> ZmqExecutor::createSubscriber(std::shared_ptr<Inbox> inbox
     return commandExecutor.createReactiveSocket(zmqpp::socket_type::xsub, inbox);
 }
 
-void ZmqExecutor::close() {
+void ZmqExecutor::initClose() {
     bool expected = false;
     if (stopRequested.compare_exchange_strong(expected, true)) {
         std::thread([&]() {
@@ -128,6 +128,22 @@ void ZmqExecutor::close() {
             commandExecutorNotifier.close();
             notificationInjectorNotifier.close();
             context.terminate();
+            closeNotifier.close();
+            //todo init callback
         }).detach();
     }
+}
+
+void ZmqExecutor::awaitClosed() {
+    try {
+        closeNotifier.wait();
+    } catch (NotifierClosedException &e) {
+        return;
+    }
+}
+
+
+ZmqExecutor::~ZmqExecutor() {
+    initClose();
+    awaitClosed();
 }
