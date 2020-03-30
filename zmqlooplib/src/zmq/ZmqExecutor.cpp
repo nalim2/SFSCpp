@@ -10,20 +10,19 @@ void ZmqExecutor::CommandExecutor::start() {
         loop.add(notificationReceiver, [&]() -> bool {
             try {
                 notificationReceiver.receive(notificationThrowaway);
-                executor.taskQueue.execute();
-                return true;
-            }
-            catch (zmqpp::zmq_internal_exception &e) {
+            } catch (zmqpp::zmq_internal_exception &e) {
                 if (e.zmq_error() != ETERM) {
                     std::cerr << "unexpected exception " << e.zmq_error() << " " << e.what() << std::endl;
-                    executor.initClose();
                 }
                 return false;
             }
-            catch (std::exception &e) {
+            try {
+                executor.taskQueue.execute();
+            } catch (std::exception &e) {
                 std::cerr << "unexpected exception from task " << e.what() << std::endl;
                 return false;
             }
+            return true;
         });
         executor.commandExecutorNotifier.notify();
         try {
@@ -31,9 +30,10 @@ void ZmqExecutor::CommandExecutor::start() {
         } catch (zmqpp::zmq_internal_exception &e) {
             if (e.zmq_error() != ETERM) {
                 std::cerr << "unexpected exception " << e.zmq_error() << " " << e.what() << std::endl;
-                executor.initClose();
             }
         }
+        executor.initClose();
+        loop.remove(notificationReceiver);
         notificationReceiver.close();
         std::cout << "loop stopped" << std::endl;
     }).detach();
@@ -66,28 +66,27 @@ ZmqExecutor::NotificationInjector::NotificationInjector(ZmqExecutor &executor) :
 
 void ZmqExecutor::NotificationInjector::start() {
     std::thread([&]() {
-                    zmqpp::socket notificationSender(executor.context, zmqpp::socket_type::pair);
-                    notificationSender.connect(executor.notificationAddress); //todo what happens with exception here?
-                    executor.notificationInjectorNotifier.notify();
-                    while (true) {
-                        try {
-                            zmqpp::message notification(true);
-                            executor.taskNotifier.wait();
-                            notificationSender.send(notification);
-                        } catch (NotifierClosedException &e) {
-                            break;
-                        } catch (zmqpp::zmq_internal_exception &e) {
-                            if (e.zmq_error() != ETERM) {
-                                std::cerr << "unexpected exception " << e.zmq_error() << e.what() << std::endl;
-                                executor.initClose();
-                            }
-                            break;
-                        }
-                    }
-                    notificationSender.close();
-                    std::cout << "notification thread stopped" << std::endl;
+        zmqpp::socket notificationSender(executor.context, zmqpp::socket_type::pair);
+        notificationSender.connect(executor.notificationAddress); //todo what happens with exception here?
+        executor.notificationInjectorNotifier.notify();
+        while (true) {
+            try {
+                zmqpp::message notification(true);
+                executor.taskNotifier.wait();
+                notificationSender.send(notification);
+            } catch (NotifierClosedException &e) {
+                break;
+            } catch (zmqpp::zmq_internal_exception &e) {
+                if (e.zmq_error() != ETERM) {
+                    std::cerr << "unexpected exception " << e.zmq_error() << e.what() << std::endl;
+                    executor.initClose();
                 }
-    ).detach();
+                break;
+            }
+        }
+        notificationSender.close();
+        std::cout << "notification thread stopped" << std::endl;
+    }).detach();
 }
 
 void ZmqExecutor::start() {
