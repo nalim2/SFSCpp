@@ -36,7 +36,7 @@ void Socket::setXPubVerbose() {
 
 void Socket::send(std::unique_ptr<std::function<zmqpp::message()>> messageSupplier) {
     executor.injectionTest(new std::function<void()>([&] {
-        zmqpp::message message = messageSupplier->operator()();
+        zmqpp::message message = messageSupplier->operator()(); //todo dont copy
         zmqSocket->send(message);
     }));
 }
