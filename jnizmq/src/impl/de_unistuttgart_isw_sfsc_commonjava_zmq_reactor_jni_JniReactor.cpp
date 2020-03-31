@@ -23,16 +23,16 @@ Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createSubscr
     auto *executor = (ZmqExecutor *) nativePointer;
     auto globalInboxRef = (jobject) env->NewGlobalRef(inbox);
     auto inboxProxy = std::make_shared<JavaInboxProxy>(globalInboxRef);
-    return (long) executor->createSubscriber(std::static_pointer_cast<Inbox>(inboxProxy)).get(); //todo wait for how long?
+    return (long) executor->createSubscriber(inboxProxy).get(); //todo wait for how long?
 }
 
 JNIEXPORT jlong JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createPublisher
-        (JNIEnv * env, jclass, jlong nativePointer, jobject inbox) {
+        (JNIEnv *env, jclass, jlong nativePointer, jobject inbox) {
     auto *executor = (ZmqExecutor *) nativePointer;
     auto globalInboxRef = (jobject) env->NewGlobalRef(inbox);
     auto inboxProxy = std::make_shared<JavaInboxProxy>(globalInboxRef);
-    return (long) executor->createPublisher(std::static_pointer_cast<Inbox>(inboxProxy)).get(); //todo wait for how long?
+    return (long) executor->createPublisher(inboxProxy).get(); //todo wait for how long?
 }
 
 JNIEXPORT void JNICALL
