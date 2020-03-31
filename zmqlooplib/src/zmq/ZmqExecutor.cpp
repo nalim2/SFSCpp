@@ -1,5 +1,7 @@
 #include <zmqlooplib/ZmqExecutor.h>
 
+#include <utility>
+
 ZmqExecutor::CommandExecutor::CommandExecutor(ZmqExecutor &executor) : executor(executor) {}
 
 void ZmqExecutor::CommandExecutor::start() {
@@ -112,11 +114,11 @@ void ZmqExecutor::injectionTest(std::function<void()> *task) { //todo rename / r
 }
 
 std::future<Socket *> ZmqExecutor::createPublisher(std::shared_ptr<Inbox> inbox) {
-    return commandExecutor.createReactiveSocket(zmqpp::socket_type::xpub, inbox);
+    return commandExecutor.createReactiveSocket(zmqpp::socket_type::xpub, std::move(inbox));
 }
 
 std::future<Socket *> ZmqExecutor::createSubscriber(std::shared_ptr<Inbox> inbox) {
-    return commandExecutor.createReactiveSocket(zmqpp::socket_type::xsub, inbox);
+    return commandExecutor.createReactiveSocket(zmqpp::socket_type::xsub, std::move(inbox));
 }
 
 void ZmqExecutor::initClose() {
