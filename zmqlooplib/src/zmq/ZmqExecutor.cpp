@@ -43,7 +43,7 @@ std::future<Socket *> ZmqExecutor::CommandExecutor::createReactiveSocket
         (zmqpp::socket_type socketType, std::shared_ptr<Inbox> inbox) {
     auto promise = std::make_shared<std::promise<Socket *>>();
     auto future = promise->get_future();
-    auto task = new std::function<void()>([=]() mutable {
+    auto task = new std::function<void()>([=, this]() mutable {
         auto zmqSocket = std::make_shared<zmqpp::socket>(executor.context, socketType);
         loop.add(*zmqSocket, [=]() {
             auto message = std::make_unique<zmqpp::message>();
@@ -51,7 +51,7 @@ std::future<Socket *> ZmqExecutor::CommandExecutor::createReactiveSocket
             inbox->receive(std::move(message));
             return true;
         });
-        auto closer = std::make_shared<std::function<void()>>([=]() {
+        auto closer = std::make_shared<std::function<void()>>([=, this]() {
             loop.remove(*zmqSocket);
         });
         auto socket = new Socket(zmqSocket, closer, executor);
