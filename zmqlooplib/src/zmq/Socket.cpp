@@ -7,7 +7,7 @@ Socket::Socket(std::shared_ptr<zmqpp::socket> zmqSocket,
         : zmqSocket(zmqSocket), closer(closer), executor(executor) {}
 
 Socket::~Socket() {
-    executor.injectionTest(new std::function<void()>([&] { closer->operator()(); }));
+    executor.injectionTest(new std::function<void()>([=] { closer->operator()(); }));
 }
 
 void Socket::connect(std::string endpoint) {
