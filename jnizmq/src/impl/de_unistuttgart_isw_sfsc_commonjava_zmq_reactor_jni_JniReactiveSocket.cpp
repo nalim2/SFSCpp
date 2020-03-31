@@ -12,7 +12,7 @@ Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket_add
         (JNIEnv *env, jclass, jlong nativePointer, jobjectArray array) {
     auto *socket = (Socket *) nativePointer;
     auto outer = (jobjectArray) env->NewGlobalRef(array);
-    auto messageSupplier = std::make_unique<std::function<zmqpp::message()>>([outer]() {
+    auto messageSupplier = std::make_shared<std::function<zmqpp::message()>>([outer]() {
         JNIEnv *env = JvmManager::attachThread();
         zmqpp::message message;
         int length = env->GetArrayLength(outer);
@@ -27,7 +27,7 @@ Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket_add
         env->DeleteGlobalRef(outer);
         return message;
     });
-    socket->send(std::move(messageSupplier));
+    socket->send(messageSupplier);
 
 }
 

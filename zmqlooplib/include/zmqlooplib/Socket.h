@@ -32,7 +32,7 @@ public:
 
     void setXPubVerbose();
 
-    void send(std::unique_ptr<std::function<zmqpp::message()>> messageSupplier);
+    void send(std::shared_ptr<std::function<zmqpp::message()>> messageSupplier);
 
 };
 

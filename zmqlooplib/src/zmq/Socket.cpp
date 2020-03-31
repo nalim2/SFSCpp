@@ -34,9 +34,9 @@ void Socket::setXPubVerbose() {
     }));
 }
 
-void Socket::send(std::unique_ptr<std::function<zmqpp::message()>> messageSupplier) {
-    executor.injectionTest(new std::function<void()>([&] {
-        zmqpp::message message = messageSupplier->operator()(); //todo dont copy
+void Socket::send(std::shared_ptr<std::function<zmqpp::message()>> messageSupplier) {
+    executor.injectionTest(new std::function<void()>([&, messageSupplier] {
+        zmqpp::message message = messageSupplier->operator()();
         zmqSocket->send(message);
     }));
 }
