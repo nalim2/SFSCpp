@@ -9,10 +9,11 @@
 class JavaRefReleaser {
 
 private:
-    jobject ref;
+    jbyteArray jArray;
+    jbyte *nativeArray;
 
 public:
-    JavaRefReleaser(jobject ref) : ref(ref) {}
+    JavaRefReleaser(jbyteArray jArray, jbyte *nativeArray) : jArray(jArray), nativeArray(nativeArray) {}
 
     static void release(void *, void *hint) {
         auto releaser = (JavaRefReleaser *) hint;
@@ -22,7 +23,7 @@ public:
 
 private:
     void release() {
-        JvmManager::attachThread()->DeleteGlobalRef(ref);
+        JvmManager::attachThread()->ReleaseByteArrayElements(jArray, nativeArray, JNI_ABORT);
     }
 
 };

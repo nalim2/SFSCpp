@@ -11,24 +11,23 @@ JNIEXPORT void JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket_add
         (JNIEnv *env, jclass, jlong nativePointer, jobjectArray array) {
     auto *socket = (Socket *) nativePointer;
-    auto outer = (jobjectArray) env->NewGlobalRef(array);
-    auto messageSupplier = std::make_shared<std::function<zmqpp::message()>>([outer]() {
+    auto jOuter = (jobjectArray) env->NewGlobalRef(array);
+    auto messageSupplier = std::make_shared<std::function<zmqpp::message()>>([jOuter]() {
         JNIEnv *env = JvmManager::attachThread();
         zmqpp::message message;
-        int length = env->GetArrayLength(outer);
+        int length = env->GetArrayLength(jOuter);
         for (int i = 0; i < length; i++) {
-            auto inner = (jbyteArray) env->GetObjectArrayElement(outer, i);
-            auto globalInner = (jbyteArray) env->NewGlobalRef(inner);
+            auto jInner = (jbyteArray) env->GetObjectArrayElement(jOuter, i);
             int innerLength = env->GetArrayLength(
-                    globalInner); //since its byte, number of elements is number of bytes
-            message.add_nocopy(globalInner, innerLength, &JavaRefReleaser::release,
-                               new JavaRefReleaser(globalInner));
+                    jInner); //since its byte, number of elements is number of bytes
+            auto innerNative = env->GetByteArrayElements(jInner, nullptr);
+            message.add_nocopy(innerNative, innerLength, &JavaRefReleaser::release,
+                               new JavaRefReleaser(jInner, innerNative));
         }
-        env->DeleteGlobalRef(outer);
+        env->DeleteGlobalRef(jOuter);
         return message;
     });
     socket->send(messageSupplier);
-
 }
 
 JNIEXPORT void JNICALL
