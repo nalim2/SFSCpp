@@ -8,7 +8,7 @@ void ZmqExecutor::CommandExecutor::start() {
     std::thread([&]() {
         zmqpp::message notificationThrowaway; // we cant use address of temp
         zmqpp::socket notificationReceiver(executor.context, zmqpp::socket_type::pair);
-        notificationReceiver.bind(executor.notificationAddress);//todo what happens with exception here?
+        notificationReceiver.bind(executor.notificationAddress);
         loop.add(notificationReceiver, [&]() -> bool {
             try {
                 notificationReceiver.receive(notificationThrowaway);
@@ -69,7 +69,7 @@ ZmqExecutor::NotificationInjector::NotificationInjector(ZmqExecutor &executor) :
 void ZmqExecutor::NotificationInjector::start() {
     std::thread([&]() {
         zmqpp::socket notificationSender(executor.context, zmqpp::socket_type::pair);
-        notificationSender.connect(executor.notificationAddress); //todo what happens with exception here?
+        notificationSender.connect(executor.notificationAddress)
         executor.notificationInjectorNotifier.notify();
         while (true) {
             try {
