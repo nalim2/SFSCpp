@@ -7,7 +7,7 @@ JNIEXPORT jlong JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_initNative
         (JNIEnv *env, jclass, jclass inboxClass, jobject shutdownHandler) {
     env->GetJavaVM(&JvmStore::vm);
-    jclass byteArrayClass = env->FindClass("[B"); //todo nullchecks for jnizmq stuff needed?
+    jclass byteArrayClass = env->FindClass("[B");
     JvmStore::byteArrayClass = (jclass) env->NewGlobalRef(byteArrayClass);
     JvmStore::inboxClass = (jclass) env->NewGlobalRef(inboxClass);
     JvmStore::inboxMethod = env->GetMethodID(inboxClass, "addInboxMessage", "([[B)V");
