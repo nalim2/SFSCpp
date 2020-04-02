@@ -24,6 +24,7 @@ public:
             env->SetByteArrayRegion(inner, 0, innerLength, (jbyte *) message->raw_data(i));
             env->SetObjectArrayElement(outer, i, inner);
         }
+        env->CallVoidMethod(globalInboxRef, JvmStore::inboxMethod, outer);
     };
 
     ~JavaInboxProxy() {
