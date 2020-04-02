@@ -69,7 +69,7 @@ ZmqExecutor::NotificationInjector::NotificationInjector(ZmqExecutor &executor) :
 void ZmqExecutor::NotificationInjector::start() {
     std::thread([&]() {
         zmqpp::socket notificationSender(executor.context, zmqpp::socket_type::pair);
-        notificationSender.connect(executor.notificationAddress)
+        notificationSender.connect(executor.notificationAddress);
         executor.notificationInjectorNotifier.notify();
         while (true) {
             try {
