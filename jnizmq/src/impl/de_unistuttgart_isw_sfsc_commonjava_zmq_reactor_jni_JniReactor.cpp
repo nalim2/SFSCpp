@@ -37,8 +37,14 @@ Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createPublis
 
 JNIEXPORT void JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_close
-        (JNIEnv *, jclass, jlong nativePointer) {
+        (JNIEnv *env, jclass, jlong nativePointer) {
     auto *executor = (ZmqExecutor *) nativePointer;
     delete executor;
+    env->DeleteGlobalRef(JvmStore::inboxClass);
+    env->DeleteGlobalRef(JvmStore::byteArrayClass);
+    env->DeleteGlobalRef(JvmStore::shutdownHandlerClass);
+    JvmStore::vm = nullptr;
+    JvmStore::inboxMethod = nullptr;
+    JvmStore::shutdownHandlerMethod = nullptr;
 }
 
