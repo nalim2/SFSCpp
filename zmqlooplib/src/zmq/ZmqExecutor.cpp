@@ -1,6 +1,7 @@
 #include <zmqlooplib/ZmqExecutor.h>
 
 #include <utility>
+#include <zmqlooplib/Callback.h>
 
 ZmqExecutor::CommandExecutor::CommandExecutor(ZmqExecutor &executor) : executor(executor) {}
 
@@ -103,8 +104,11 @@ void ZmqExecutor::inject(std::function<void()> *task) {
     taskNotifier.notify();
 }
 
-ZmqExecutor *ZmqExecutor::create() {
-    auto zmqExecutor = new ZmqExecutor();
+ZmqExecutor::ZmqExecutor(std::shared_ptr<Callback> shutdownCallback) :
+        shutdownCallback(std::move(shutdownCallback)) {}
+
+ZmqExecutor *ZmqExecutor::create(std::shared_ptr<Callback> shutdownCallback) {
+    auto zmqExecutor = new ZmqExecutor(std::move(shutdownCallback));
     zmqExecutor->start();
     return zmqExecutor;
 }
@@ -124,13 +128,13 @@ std::future<Socket *> ZmqExecutor::createSubscriber(std::shared_ptr<Inbox> inbox
 void ZmqExecutor::initClose() {
     static bool expected = false;
     if (stopRequested.compare_exchange_strong(expected, true)) {
-        std::thread([&]() {
+        std::thread([&, shutdownCallback = std::move(shutdownCallback)]() {
             taskNotifier.close();
             commandExecutorNotifier.close();
             notificationInjectorNotifier.close();
             context.terminate();
             closeNotifier.close();
-            //todo init callback
+            shutdownCallback->callback();
         }).detach();
     }
 }
@@ -142,7 +146,6 @@ void ZmqExecutor::awaitClosed() {
         return;
     }
 }
-
 
 ZmqExecutor::~ZmqExecutor() {
     initClose();

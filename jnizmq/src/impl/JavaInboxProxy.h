@@ -12,7 +12,9 @@ class JavaInboxProxy : public Inbox {
 private:
     jobject globalInboxRef;
 public:
-    JavaInboxProxy(jobject globalInboxRef) : globalInboxRef(globalInboxRef) {}
+    JavaInboxProxy(jobject inboxRef) {
+        globalInboxRef = JvmManager::attachThread()->NewGlobalRef(inboxRef);
+    }
 
     void receive(std::unique_ptr<zmqpp::message> message) {
         JNIEnv *env = JvmManager::attachThread();

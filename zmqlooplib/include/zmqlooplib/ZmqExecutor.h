@@ -5,6 +5,7 @@
 #include "Inbox.h"
 #include "../../src/util/taskQueue.h"
 #include "../../src/util/notifier.h"
+#include "Callback.h"
 
 #include <zmqpp/zmqpp.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -50,8 +51,9 @@ private:
     Notifier closeNotifier;
     CommandExecutor commandExecutor = CommandExecutor(*this);
     NotificationInjector notificationInjector = NotificationInjector(*this);
+    std::shared_ptr<Callback> shutdownCallback;
 
-    ZmqExecutor() = default;
+    ZmqExecutor(std::shared_ptr<Callback> shutdownCallback);
 
     void start();
 
@@ -62,15 +64,13 @@ private:
     void awaitClosed();
 
 public:
-    static ZmqExecutor *create();
+    static ZmqExecutor * create(std::shared_ptr<Callback> shutdownCallback);
 
     void injectionTest(std::function<void()> *task); //todo rename method
 
     std::future<Socket *> createPublisher(std::shared_ptr<Inbox> inbox);
 
     std::future<Socket *> createSubscriber(std::shared_ptr<Inbox> inbox);
-
-//    void addShutdownListener(); todo instead call java executeAll sth
 
     ~ZmqExecutor();
 };

@@ -13,6 +13,7 @@ add_library(zmqLoopLib SHARED
         zmqlooplib/include/zmqlooplib/Socket.h
         zmqlooplib/include/zmqlooplib/Inbox.h
         zmqlooplib/include/zmqlooplib/ZmqExecutor.h
+        zmqlooplib/include/zmqlooplib/Callback.h
 
         zmqlooplib/src/util/notifier.cpp
         zmqlooplib/src/util/notifier.h
@@ -33,7 +34,8 @@ add_library(jniZmq SHARED
         jnizmq/src/impl/JvmManager.cpp
         jnizmq/src/impl/JvmManager.h
         jnizmq/src/impl/util.h
-        jnizmq/src/impl/JavaInboxProxy.h)
+        jnizmq/src/impl/JavaInboxProxy.h
+        jnizmq/src/impl/JavaShutdownCallbackProxy.h)
 target_include_directories(jniZmq PUBLIC jnizmq) # todo maybe includes too much? visibility?
 target_link_libraries(jniZmq PUBLIC zmqLoopLib) # todo visibility?
 

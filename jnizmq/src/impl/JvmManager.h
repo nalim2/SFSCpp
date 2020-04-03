@@ -10,8 +10,8 @@ namespace JvmStore {
     extern jclass byteArrayClass;
     extern jclass inboxClass;
     extern jmethodID inboxMethod;
-    extern jclass shutdownHandlerClass;
-    extern jmethodID shutdownHandlerMethod;
+    extern jclass shutdownCallbackClass;
+    extern jmethodID shutdownCallbackMethod;
 }
 
 class JvmManager {
