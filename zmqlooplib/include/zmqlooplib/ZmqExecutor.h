@@ -3,8 +3,8 @@
 
 #include "Socket.h"
 #include "Inbox.h"
-#include "../../src/util/taskQueue.h" //todo .. ?
-#include "../../src/util/notifier.h"  //todo .. ?
+#include "../../src/util/taskQueue.h"
+#include "../../src/util/notifier.h"
 
 #include <zmqpp/zmqpp.hpp>
 #include <boost/uuid/uuid.hpp>
