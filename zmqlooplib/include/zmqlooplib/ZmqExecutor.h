@@ -13,12 +13,14 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <iostream>
 #include <future>
+#include <set>
 
 class ZmqExecutor {
 
 private:
     class CommandExecutor {
         zmqpp::loop loop;
+        std::set<zmqpp::socket *> sockets;
         ZmqExecutor &executor;
 
     public:
@@ -64,7 +66,7 @@ private:
     void awaitClosed();
 
 public:
-    static ZmqExecutor * create(std::shared_ptr<Callback> shutdownCallback);
+    static ZmqExecutor *create(std::shared_ptr<Callback> shutdownCallback);
 
     void injectionTest(std::function<void()> *task); //todo rename method
 

@@ -38,6 +38,9 @@ void ZmqExecutor::CommandExecutor::start() {
         executor.initClose();
         loop.remove(notificationReceiver);
         notificationReceiver.close();
+        for (auto socket : sockets){
+            socket->close();
+        }
         std::cout << "loop stopped" << std::endl;
     }).detach();
 }
@@ -56,8 +59,10 @@ std::future<Socket *> ZmqExecutor::CommandExecutor::createReactiveSocket
         });
         auto closer = std::make_shared<std::function<void()>>([=, this]() {
             loop.remove(*zmqSocket);
+            sockets.erase(&*zmqSocket);
         });
-        auto socket = new Socket(zmqSocket, closer, executor);
+        auto socket = new Socket(zmqSocket, std::move(closer), executor);
+        sockets.insert(&*zmqSocket);
         promise->set_value(socket);
     });
     executor.inject(task);
@@ -100,8 +105,10 @@ void ZmqExecutor::start() {
 }
 
 void ZmqExecutor::inject(std::function<void()> *task) {
-    taskQueue.add(task);
-    taskNotifier.notify();
+    if (!stopRequested) {
+        taskQueue.add(task);
+        taskNotifier.notify();
+    }
 }
 
 ZmqExecutor::ZmqExecutor(std::shared_ptr<Callback> shutdownCallback) :
