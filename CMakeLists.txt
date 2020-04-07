@@ -25,12 +25,10 @@ add_library(zmqLoopLib SHARED
 target_include_directories(zmqLoopLib PUBLIC zmqlooplib/include) # todo visibility?
 
 add_library(jniZmq SHARED
-        jnizmq/src/headers/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket.h
-        jnizmq/src/headers/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor.h
 
         jnizmq/src/impl/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket.cpp
         jnizmq/src/impl/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor.cpp
-        jnizmq/src/impl/JavaRefReleaser.h
+        jnizmq/src/impl/JavaArrayRefReleaser.h
         jnizmq/src/impl/JvmManager.cpp
         jnizmq/src/impl/JvmManager.h
         jnizmq/src/impl/util.h

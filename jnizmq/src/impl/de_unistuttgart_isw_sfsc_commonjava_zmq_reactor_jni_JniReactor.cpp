@@ -5,46 +5,34 @@
 #include "JavaShutdownCallbackProxy.h"
 
 JNIEXPORT jlong JNICALL
-Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_initNative
-        (JNIEnv *env, jclass, jclass inboxClass, jobject shutdownCallback) {
+Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createNative
+        (JNIEnv *env, jclass, jobject shutdownCallbackObject) {
     env->GetJavaVM(&JvmStore::vm);
-    jclass byteArrayClass = env->FindClass("[B");
-    JvmStore::byteArrayClass = (jclass) env->NewGlobalRef(byteArrayClass);
-    JvmStore::inboxClass = (jclass) env->NewGlobalRef(inboxClass);
-    JvmStore::inboxMethod = env->GetMethodID(inboxClass, "addInboxMessage", "([[B)V");
-    JvmStore::shutdownCallbackClass = (jclass) env->NewGlobalRef(env->GetObjectClass(shutdownCallback));
-    JvmStore::shutdownCallbackMethod = env->GetMethodID(JvmStore::shutdownCallbackClass, "shutdownCallback", "()V");
-    auto shutdownCallbackProxy = std::make_shared<JavaShutdownCallbackProxy>(shutdownCallback);
-    ZmqExecutor *executor = ZmqExecutor::create(shutdownCallbackProxy);
+    auto shutdownCallbackProxy = std::make_shared<JavaShutdownCallbackProxy>(env, shutdownCallbackObject);
+    auto executor = ZmqExecutor::create(shutdownCallbackProxy);
     return (long) executor;
 }
 
 JNIEXPORT jlong JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createSubscriber
-        (JNIEnv *env, jclass, jlong nativePointer, jobject inbox) {
+        (JNIEnv *env, jclass, jlong nativePointer, jobject inboxObject) {
     auto *executor = (ZmqExecutor *) nativePointer;
-    auto inboxProxy = std::make_shared<JavaInboxProxy>(inbox);
+    auto inboxProxy = std::make_shared<JavaInboxProxy>(env, inboxObject);
     return (long) executor->createSubscriber(inboxProxy).get(); //todo wait for how long?
 }
 
 JNIEXPORT jlong JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createPublisher
-        (JNIEnv *env, jclass, jlong nativePointer, jobject inbox) {
+        (JNIEnv *env, jclass, jlong nativePointer, jobject inboxObject) {
     auto *executor = (ZmqExecutor *) nativePointer;
-    auto inboxProxy = std::make_shared<JavaInboxProxy>(inbox);
+    auto inboxProxy = std::make_shared<JavaInboxProxy>(env, inboxObject);
     return (long) executor->createPublisher(inboxProxy).get(); //todo wait for how long?
 }
 
 JNIEXPORT void JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_close
-        (JNIEnv *env, jclass, jlong nativePointer) {
+        (JNIEnv *, jclass, jlong nativePointer) {
     auto *executor = (ZmqExecutor *) nativePointer;
     delete executor;
-    env->DeleteGlobalRef(JvmStore::inboxClass);
-    env->DeleteGlobalRef(JvmStore::byteArrayClass);
-    env->DeleteGlobalRef(JvmStore::shutdownCallbackClass);
-    JvmStore::vm = nullptr;
-    JvmStore::inboxMethod = nullptr;
-    JvmStore::shutdownCallbackMethod = nullptr;
 }
 

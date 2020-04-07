@@ -9,11 +9,11 @@ extern "C" {
 #endif
 /*
  * Class:     de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor
- * Method:    initNative
- * Signature: (Ljava/lang/Class;Lde/unistuttgart/isw/sfsc/commonjava/zmq/reactor/jni/ShutdownHandler;)J
+ * Method:    createNative
+ * Signature: (Lde/unistuttgart/isw/sfsc/commonjava/zmq/reactor/jni/ShutdownCallback;)J
  */
-JNIEXPORT jlong JNICALL Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_initNative
-  (JNIEnv *, jclass, jclass, jobject);
+JNIEXPORT jlong JNICALL Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createNative
+  (JNIEnv *, jclass, jobject);
 
 /*
  * Class:     de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor

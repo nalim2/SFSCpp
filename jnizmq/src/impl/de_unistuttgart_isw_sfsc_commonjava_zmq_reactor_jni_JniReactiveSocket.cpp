@@ -1,6 +1,6 @@
 #include "src/headers/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket.h"
 #include "util.h"
-#include "JavaRefReleaser.h"
+#include "JavaArrayRefReleaser.h"
 #include "JvmManager.h"
 
 #include <zmqlooplib/Socket.h>
@@ -21,8 +21,8 @@ Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket_add
             int innerLength = env->GetArrayLength(
                     jInner); //since its byte, number of elements is number of bytes
             auto innerNative = env->GetByteArrayElements(jInner, nullptr);
-            message.add_nocopy(innerNative, innerLength, &JavaRefReleaser::release,
-                               new JavaRefReleaser(jInner, innerNative));
+            message.add_nocopy(innerNative, innerLength, &JavaArrayRefReleaser::release,
+                               new JavaArrayRefReleaser(jInner, innerNative));
         }
         env->DeleteGlobalRef(jOuter);
         return message;

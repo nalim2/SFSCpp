@@ -1,22 +1,22 @@
-#ifndef ZMQLOOPLIB_JAVAREFRELEASER_H
-#define ZMQLOOPLIB_JAVAREFRELEASER_H
+#ifndef ZMQLOOPLIB_JAVAARRAYREFRELEASER_H
+#define ZMQLOOPLIB_JAVAARRAYREFRELEASER_H
 
 #include <jni.h>
 #include <memory>
 #include <functional>
 #include "JvmManager.h"
 
-class JavaRefReleaser {
+class JavaArrayRefReleaser {
 
 private:
     jbyteArray jArray;
     jbyte *nativeArray;
 
 public:
-    JavaRefReleaser(jbyteArray jArray, jbyte *nativeArray) : jArray(jArray), nativeArray(nativeArray) {}
+    JavaArrayRefReleaser(jbyteArray jArray, jbyte *nativeArray) : jArray(jArray), nativeArray(nativeArray) {}
 
     static void release(void *, void *hint) {
-        auto releaser = (JavaRefReleaser *) hint;
+        auto releaser = (JavaArrayRefReleaser *) hint;
         releaser->release();
         delete releaser;
     }
@@ -28,5 +28,4 @@ private:
 
 };
 
-
-#endif //ZMQLOOPLIB_JAVAREFRELEASER_H
+#endif //ZMQLOOPLIB_JAVAARRAYREFRELEASER_H

@@ -11,26 +11,36 @@
 class JavaInboxProxy : public Inbox {
 private:
     jobject globalInboxRef;
+    jclass inboxClass;
+    jmethodID inboxMethod;
+    jclass byteArrayClass;
+
 public:
-    JavaInboxProxy(jobject inboxRef) {
-        globalInboxRef = JvmManager::attachThread()->NewGlobalRef(inboxRef);
+    JavaInboxProxy(JNIEnv *env, jobject inboxObject) {
+        globalInboxRef = env->NewGlobalRef(inboxObject);
+        inboxClass = (jclass) env->NewGlobalRef(env->GetObjectClass(inboxObject));
+        inboxMethod = env->GetMethodID(inboxClass, "addInboxMessage", "([[B)V");
+        byteArrayClass = (jclass) env->NewGlobalRef(env->FindClass("[B"));
     }
 
     void receive(std::unique_ptr<zmqpp::message> message) {
         JNIEnv *env = JvmManager::attachThread();
         int outerLength = message->parts();
-        jobjectArray outer = env->NewObjectArray(outerLength, JvmStore::byteArrayClass, nullptr);
+        jobjectArray outer = env->NewObjectArray(outerLength, byteArrayClass, nullptr);
         for (int i = 0; i < outerLength; i++) {
             int innerLength = message->size(i);
             jbyteArray inner = env->NewByteArray(innerLength);
             env->SetByteArrayRegion(inner, 0, innerLength, (jbyte *) message->raw_data(i));
             env->SetObjectArrayElement(outer, i, inner);
         }
-        env->CallVoidMethod(globalInboxRef, JvmStore::inboxMethod, outer);
+        env->CallVoidMethod(globalInboxRef, inboxMethod, outer);
     };
 
     ~JavaInboxProxy() {
-        JvmManager::attachThread()->DeleteGlobalRef(globalInboxRef);
+        JNIEnv *env = JvmManager::attachThread();
+        env->DeleteGlobalRef(globalInboxRef);
+        env->DeleteGlobalRef(inboxClass);
+        env->DeleteGlobalRef(byteArrayClass);
     }
 };
 
