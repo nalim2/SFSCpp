@@ -133,7 +133,7 @@ std::future<Socket *> ZmqExecutor::createSubscriber(std::shared_ptr<Inbox> inbox
 }
 
 void ZmqExecutor::initClose() {
-    static bool expected = false;
+    bool expected = false;
     if (stopRequested.compare_exchange_strong(expected, true)) {
         std::thread([&, shutdownCallback = std::move(shutdownCallback)]() {
             taskNotifier.close();
