@@ -10,6 +10,9 @@
 
 class JavaInboxProxy : public Inbox {
 private:
+    const std::string javaAddMethodName = "addInboxMessage";
+    const std::string javaAddMethodSignature = "([[B)V";
+    const std::string javaByteArrayClassName = "[B";
     jobject globalInboxRef;
     jclass inboxClass;
     jmethodID inboxMethod;
@@ -19,8 +22,8 @@ public:
     JavaInboxProxy(JNIEnv *env, jobject inboxObject) {
         globalInboxRef = env->NewGlobalRef(inboxObject);
         inboxClass = (jclass) env->NewGlobalRef(env->GetObjectClass(inboxObject));
-        inboxMethod = env->GetMethodID(inboxClass, "addInboxMessage", "([[B)V");
-        byteArrayClass = (jclass) env->NewGlobalRef(env->FindClass("[B"));
+        inboxMethod = env->GetMethodID(inboxClass, javaAddMethodName.c_str(), javaAddMethodSignature.c_str());
+        byteArrayClass = (jclass) env->NewGlobalRef(env->FindClass(javaByteArrayClassName.c_str()));
     }
 
     void receive(std::unique_ptr<zmqpp::message> message) {
