@@ -6,7 +6,7 @@
 #include <memory>
 #include <functional>
 
-class ZmqExecutor; //todo needed / other ways?
+class ZmqExecutor;
 
 class Socket {
 private:
