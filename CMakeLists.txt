@@ -36,5 +36,3 @@ add_library(jniZmq SHARED
         jnizmq/src/impl/JavaShutdownCallbackProxy.h)
 target_include_directories(jniZmq PUBLIC jnizmq) # todo maybe includes too much? visibility?
 target_link_libraries(jniZmq PUBLIC zmqLoopLib) # todo visibility?
-
-# todo also automatically install with cmake?
