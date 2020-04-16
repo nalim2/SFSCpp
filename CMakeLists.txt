@@ -22,7 +22,7 @@ add_library(zmqLoopLib SHARED
 
         zmqlooplib/src/zmq/ZmqExecutor.cpp
         zmqlooplib/src/zmq/Socket.cpp)
-target_include_directories(zmqLoopLib PUBLIC zmqlooplib/include) # todo visibility?
+target_include_directories(zmqLoopLib PUBLIC zmqlooplib/include)
 
 add_library(jniZmq SHARED
 
@@ -34,5 +34,5 @@ add_library(jniZmq SHARED
         jnizmq/src/impl/util.h
         jnizmq/src/impl/JavaInboxProxy.h
         jnizmq/src/impl/JavaShutdownCallbackProxy.h)
-target_include_directories(jniZmq PUBLIC jnizmq) # todo maybe includes too much? visibility?
-target_link_libraries(jniZmq PUBLIC zmqLoopLib) # todo visibility?
+target_include_directories(jniZmq PUBLIC jnizmq)
+target_link_libraries(jniZmq PUBLIC zmqLoopLib)
