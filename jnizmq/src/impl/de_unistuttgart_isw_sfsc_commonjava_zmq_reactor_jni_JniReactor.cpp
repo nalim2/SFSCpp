@@ -18,7 +18,7 @@ Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createSubscr
         (JNIEnv *env, jclass, jlong nativePointer, jobject inboxObject) {
     auto *executor = (ZmqExecutor *) nativePointer;
     auto inboxProxy = std::make_shared<JavaInboxProxy>(env, inboxObject);
-    return (long) executor->createSubscriber(inboxProxy).get(); //todo wait for how long?
+    return (long) executor->createSubscriber(inboxProxy).get();
 }
 
 JNIEXPORT jlong JNICALL
@@ -26,7 +26,7 @@ Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createPublis
         (JNIEnv *env, jclass, jlong nativePointer, jobject inboxObject) {
     auto *executor = (ZmqExecutor *) nativePointer;
     auto inboxProxy = std::make_shared<JavaInboxProxy>(env, inboxObject);
-    return (long) executor->createPublisher(inboxProxy).get(); //todo wait for how long?
+    return (long) executor->createPublisher(inboxProxy).get();
 }
 
 JNIEXPORT void JNICALL
