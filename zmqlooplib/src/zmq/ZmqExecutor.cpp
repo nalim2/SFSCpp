@@ -120,10 +120,6 @@ ZmqExecutor *ZmqExecutor::create(std::shared_ptr<Callback> shutdownCallback) {
     return zmqExecutor;
 }
 
-void ZmqExecutor::injectionTest(std::function<void()> *task) { //todo rename / remove / evaluate "friend class"
-    inject(task);
-}
-
 std::future<Socket *> ZmqExecutor::createPublisher(std::shared_ptr<Inbox> inbox) {
     return commandExecutor.createReactiveSocket(zmqpp::socket_type::xpub, std::move(inbox));
 }

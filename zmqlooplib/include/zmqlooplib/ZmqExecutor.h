@@ -59,6 +59,7 @@ private:
 
     void start();
 
+    friend class Socket;
     void inject(std::function<void()> *task);
 
     void initClose();
@@ -67,8 +68,6 @@ private:
 
 public:
     static ZmqExecutor *create(std::shared_ptr<Callback> shutdownCallback);
-
-    void injectionTest(std::function<void()> *task); //todo rename method
 
     std::future<Socket *> createPublisher(std::shared_ptr<Inbox> inbox);
 
