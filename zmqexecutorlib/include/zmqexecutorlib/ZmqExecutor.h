@@ -3,8 +3,8 @@
 
 #include "Socket.h"
 #include "Inbox.h"
-#include "../../src/util/taskQueue.h"
-#include "../../src/util/notifier.h"
+#include "../../src/taskQueue.h"
+#include "../../src/notifier.h"
 #include "Callback.h"
 
 #include <zmqpp/zmqpp.hpp>

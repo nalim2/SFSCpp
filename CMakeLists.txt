@@ -15,17 +15,13 @@ add_library(ZmqExecutorLib SHARED
         zmqexecutorlib/include/zmqexecutorlib/ZmqExecutor.h
         zmqexecutorlib/include/zmqexecutorlib/Callback.h
 
-        zmqexecutorlib/src/util/notifier.cpp
-        zmqexecutorlib/src/util/notifier.h
-        zmqexecutorlib/src/util/taskQueue.cpp
-        zmqexecutorlib/src/util/taskQueue.h
-
-        zmqexecutorlib/src/zmq/ZmqExecutor.cpp
-        zmqexecutorlib/src/zmq/Socket.cpp)
+        zmqexecutorlib/src/notifier.h
+        zmqexecutorlib/src/taskQueue.h
+        zmqexecutorlib/src/ZmqExecutor.cpp
+        zmqexecutorlib/src/Socket.cpp)
 target_include_directories(ZmqExecutorLib PUBLIC zmqexecutorlib/include)
 
 add_library(JniZmq SHARED
-
         jnizmq/src/impl/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket.cpp
         jnizmq/src/impl/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor.cpp
         jnizmq/src/impl/JavaArrayRefReleaser.h
