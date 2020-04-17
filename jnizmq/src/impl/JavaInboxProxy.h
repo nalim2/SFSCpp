@@ -1,10 +1,10 @@
-#ifndef ZMQLOOPLIB_JAVAINBOXPROXY_H
-#define ZMQLOOPLIB_JAVAINBOXPROXY_H
+#ifndef JNIZMQ_JAVAINBOXPROXY_H
+#define JNIZMQ_JAVAINBOXPROXY_H
 
 #include <jni.h>
 #include <memory>
 #include <zmqpp/message.hpp>
-#include <zmqlooplib/Inbox.h>
+#include <zmqexecutorlib/Inbox.h>
 #include "JvmManager.h"
 
 
@@ -47,4 +47,4 @@ public:
     }
 };
 
-#endif //ZMQLOOPLIB_JAVAINBOXPROXY_H
+#endif //JNIZMQ_JAVAINBOXPROXY_H

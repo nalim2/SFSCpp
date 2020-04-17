@@ -1,5 +1,5 @@
-#ifndef ZMQLOOPLIB_NOTIFIER_H
-#define ZMQLOOPLIB_NOTIFIER_H
+#ifndef ZMQEXECUTORLIB_NOTIFIER_H
+#define ZMQEXECUTORLIB_NOTIFIER_H
 
 #include <mutex>
 #include <condition_variable>
@@ -23,4 +23,4 @@ class NotifierClosedException : std::exception {
 
 };
 
-#endif //ZMQLOOPLIB_NOTIFIER_H
+#endif //ZMQEXECUTORLIB_NOTIFIER_H

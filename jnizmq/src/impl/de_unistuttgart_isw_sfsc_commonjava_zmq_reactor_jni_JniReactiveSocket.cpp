@@ -3,7 +3,7 @@
 #include "JavaArrayRefReleaser.h"
 #include "JvmManager.h"
 
-#include <zmqlooplib/Socket.h>
+#include <zmqexecutorlib/Socket.h>
 #include <zmqpp/message.hpp>
 
 

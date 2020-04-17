@@ -1,5 +1,5 @@
-#include <zmqlooplib/Socket.h>
-#include <zmqlooplib/ZmqExecutor.h>
+#include <zmqexecutorlib/Socket.h>
+#include <zmqexecutorlib/ZmqExecutor.h>
 
 #include <utility>
 

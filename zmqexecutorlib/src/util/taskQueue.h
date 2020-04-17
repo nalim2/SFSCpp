@@ -1,5 +1,5 @@
-#ifndef ZMQLOOPLIB_TASKQUEUE_H
-#define ZMQLOOPLIB_TASKQUEUE_H
+#ifndef ZMQEXECUTORLIB_TASKQUEUE_H
+#define ZMQEXECUTORLIB_TASKQUEUE_H
 
 #include <boost/lockfree/queue.hpp>
 #include <iostream>
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //ZMQLOOPLIB_TASKQUEUE_H
+#endif //ZMQEXECUTORLIB_TASKQUEUE_H

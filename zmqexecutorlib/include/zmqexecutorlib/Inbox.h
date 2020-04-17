@@ -1,5 +1,5 @@
-#ifndef ZMQLOOPLIB_INBOX_H
-#define ZMQLOOPLIB_INBOX_H
+#ifndef ZMQEXECUTORLIB_INBOX_H
+#define ZMQEXECUTORLIB_INBOX_H
 
 #include <zmqpp/message.hpp>
 #include <memory>
@@ -11,4 +11,4 @@ public:
     virtual ~Inbox() = default;
 };
 
-#endif //ZMQLOOPLIB_INBOX_H
+#endif //ZMQEXECUTORLIB_INBOX_H

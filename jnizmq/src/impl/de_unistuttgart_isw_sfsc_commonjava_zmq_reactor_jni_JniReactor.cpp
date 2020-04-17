@@ -1,5 +1,5 @@
 #include "src/headers/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor.h"
-#include <zmqlooplib/ZmqExecutor.h>
+#include <zmqexecutorlib/ZmqExecutor.h>
 #include "JvmManager.h"
 #include "JavaInboxProxy.h"
 #include "JavaShutdownCallbackProxy.h"

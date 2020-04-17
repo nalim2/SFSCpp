@@ -1,5 +1,5 @@
-#ifndef ZMQLOOPLIB_UTIL_H
-#define ZMQLOOPLIB_UTIL_H
+#ifndef JNIZMQ_UTIL_H
+#define JNIZMQ_UTIL_H
 
 #include <string>
 #include <jni.h>
@@ -11,4 +11,4 @@ std::string jstringToString(JNIEnv *env, jstring jstring) {
     return cppString;
 }
 
-#endif //ZMQLOOPLIB_UTIL_H
+#endif //JNIZMQ_UTIL_H

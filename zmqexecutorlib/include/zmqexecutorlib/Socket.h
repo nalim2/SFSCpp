@@ -1,5 +1,5 @@
-#ifndef ZMQLOOPLIB_SOCKET_H
-#define ZMQLOOPLIB_SOCKET_H
+#ifndef ZMQEXECUTORLIB_SOCKET_H
+#define ZMQEXECUTORLIB_SOCKET_H
 
 #include <string>
 #include <zmqpp/socket.hpp>
@@ -37,4 +37,4 @@ public:
 };
 
 
-#endif //ZMQLOOPLIB_SOCKET_H
+#endif //ZMQEXECUTORLIB_SOCKET_H

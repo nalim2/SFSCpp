@@ -1,7 +1,7 @@
-#ifndef ZMQLOOPLIB_JAVASHUTDOWNCALLBACKPROXY_H
-#define ZMQLOOPLIB_JAVASHUTDOWNCALLBACKPROXY_H
+#ifndef JNIZMQ_JAVASHUTDOWNCALLBACKPROXY_H
+#define JNIZMQ_JAVASHUTDOWNCALLBACKPROXY_H
 
-#include <zmqlooplib/Callback.h>
+#include <zmqexecutorlib/Callback.h>
 #include "JvmManager.h"
 
 class JavaShutdownCallbackProxy : public Callback {
@@ -31,4 +31,4 @@ public:
     }
 };
 
-#endif //ZMQLOOPLIB_JAVASHUTDOWNCALLBACKPROXY_H
+#endif //JNIZMQ_JAVASHUTDOWNCALLBACKPROXY_H

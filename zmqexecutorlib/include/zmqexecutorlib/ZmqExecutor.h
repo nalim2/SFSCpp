@@ -1,5 +1,5 @@
-#ifndef ZMQLOOPLIB_ZMQEXECUTOR_H
-#define ZMQLOOPLIB_ZMQEXECUTOR_H
+#ifndef ZMQEXECUTORLIB_ZMQEXECUTOR_H
+#define ZMQEXECUTORLIB_ZMQEXECUTOR_H
 
 #include "Socket.h"
 #include "Inbox.h"
@@ -76,4 +76,4 @@ public:
     ~ZmqExecutor();
 };
 
-#endif //ZMQLOOPLIB_ZMQEXECUTOR_H
+#endif //ZMQEXECUTORLIB_ZMQEXECUTOR_H

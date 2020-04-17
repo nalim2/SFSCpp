@@ -1,7 +1,7 @@
-#include <zmqlooplib/ZmqExecutor.h>
+#include <zmqexecutorlib/ZmqExecutor.h>
 
 #include <utility>
-#include <zmqlooplib/Callback.h>
+#include <zmqexecutorlib/Callback.h>
 
 ZmqExecutor::CommandExecutor::CommandExecutor(ZmqExecutor &executor) : executor(executor) {}
 

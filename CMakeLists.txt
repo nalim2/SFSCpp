@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(ZmqLoopLib)
+project(SFSCpp)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
@@ -9,20 +9,20 @@ link_libraries(zmqpp zmqpp)
 find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 
-add_library(zmqLoopLib SHARED
-        zmqlooplib/include/zmqlooplib/Socket.h
-        zmqlooplib/include/zmqlooplib/Inbox.h
-        zmqlooplib/include/zmqlooplib/ZmqExecutor.h
-        zmqlooplib/include/zmqlooplib/Callback.h
+add_library(zmqExecutorLib SHARED
+        zmqexecutorlib/include/zmqexecutorlib/Socket.h
+        zmqexecutorlib/include/zmqexecutorlib/Inbox.h
+        zmqexecutorlib/include/zmqexecutorlib/ZmqExecutor.h
+        zmqexecutorlib/include/zmqexecutorlib/Callback.h
 
-        zmqlooplib/src/util/notifier.cpp
-        zmqlooplib/src/util/notifier.h
-        zmqlooplib/src/util/taskQueue.cpp
-        zmqlooplib/src/util/taskQueue.h
+        zmqexecutorlib/src/util/notifier.cpp
+        zmqexecutorlib/src/util/notifier.h
+        zmqexecutorlib/src/util/taskQueue.cpp
+        zmqexecutorlib/src/util/taskQueue.h
 
-        zmqlooplib/src/zmq/ZmqExecutor.cpp
-        zmqlooplib/src/zmq/Socket.cpp)
-target_include_directories(zmqLoopLib PUBLIC zmqlooplib/include)
+        zmqexecutorlib/src/zmq/ZmqExecutor.cpp
+        zmqexecutorlib/src/zmq/Socket.cpp)
+target_include_directories(zmqExecutorLib PUBLIC zmqexecutorlib/include)
 
 add_library(jniZmq SHARED
 
@@ -35,4 +35,4 @@ add_library(jniZmq SHARED
         jnizmq/src/impl/JavaInboxProxy.h
         jnizmq/src/impl/JavaShutdownCallbackProxy.h)
 target_include_directories(jniZmq PUBLIC jnizmq)
-target_link_libraries(jniZmq PUBLIC zmqLoopLib)
+target_link_libraries(jniZmq PUBLIC zmqExecutorLib)

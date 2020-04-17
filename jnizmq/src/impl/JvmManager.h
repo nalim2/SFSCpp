@@ -1,5 +1,5 @@
-#ifndef ZMQLOOPLIB_JVMMANAGER_H
-#define ZMQLOOPLIB_JVMMANAGER_H
+#ifndef JNIZMQ_JVMMANAGER_H
+#define JNIZMQ_JVMMANAGER_H
 
 #include <jni.h>
 #include <memory>
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //ZMQLOOPLIB_JVMMANAGER_H
+#endif //JNIZMQ_JVMMANAGER_H
