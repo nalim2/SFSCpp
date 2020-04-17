@@ -9,7 +9,7 @@ link_libraries(zmqpp zmqpp)
 find_package(JNI REQUIRED)
 include_directories(${JNI_INCLUDE_DIRS})
 
-add_library(zmqExecutorLib SHARED
+add_library(ZmqExecutorLib SHARED
         zmqexecutorlib/include/zmqexecutorlib/Socket.h
         zmqexecutorlib/include/zmqexecutorlib/Inbox.h
         zmqexecutorlib/include/zmqexecutorlib/ZmqExecutor.h
@@ -22,9 +22,9 @@ add_library(zmqExecutorLib SHARED
 
         zmqexecutorlib/src/zmq/ZmqExecutor.cpp
         zmqexecutorlib/src/zmq/Socket.cpp)
-target_include_directories(zmqExecutorLib PUBLIC zmqexecutorlib/include)
+target_include_directories(ZmqExecutorLib PUBLIC zmqexecutorlib/include)
 
-add_library(jniZmq SHARED
+add_library(JniZmq SHARED
 
         jnizmq/src/impl/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket.cpp
         jnizmq/src/impl/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor.cpp
@@ -34,5 +34,5 @@ add_library(jniZmq SHARED
         jnizmq/src/impl/util.h
         jnizmq/src/impl/JavaInboxProxy.h
         jnizmq/src/impl/JavaShutdownCallbackProxy.h)
-target_include_directories(jniZmq PUBLIC jnizmq)
-target_link_libraries(jniZmq PUBLIC zmqExecutorLib)
+target_include_directories(JniZmq PUBLIC jnizmq)
+target_link_libraries(JniZmq PUBLIC ZmqExecutorLib)
