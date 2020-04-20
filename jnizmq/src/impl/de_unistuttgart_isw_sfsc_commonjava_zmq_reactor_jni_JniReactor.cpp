@@ -7,10 +7,10 @@
 JNIEXPORT jlong JNICALL
 Java_de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactor_createNative
         (JNIEnv *env, jclass, jobject shutdownCallbackObject) {
-    env->GetJavaVM(&JvmStore::vm);
+    env->GetJavaVM(&JvmStore::vm); //sets the global jvm variable, since it doenst change just re-set it everytime
     auto shutdownCallbackProxy = std::make_shared<JavaShutdownCallbackProxy>(env, shutdownCallbackObject);
     auto executor = ZmqExecutor::create(shutdownCallbackProxy);
-    return (long) executor;
+    return (long) executor; //returns a pointer to this executor, so later jvm calls can access the correct c++ object
 }
 
 JNIEXPORT jlong JNICALL

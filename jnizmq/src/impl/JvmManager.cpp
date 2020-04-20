@@ -12,6 +12,7 @@ JNIEnv *JvmManager::attachThread() {
             JvmStore::vm->DetachCurrentThread();
         }
     };
+    //thread_local (implicit static), so once for every thread who called this. Deallocated automatically on thread end
     thread_local DetachOnJniExit detach;
     return env;
 }

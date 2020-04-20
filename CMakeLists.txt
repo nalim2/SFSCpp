@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.15)
 project(SFSCpp)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread") #needed for multithreading
 
-link_libraries(zmqpp zmqpp)
+link_libraries(zmqpp zmqpp) #zmqpp library needs to be installed before
 
-find_package(JNI REQUIRED)
+find_package(JNI REQUIRED) #jni is usually automatically installed with the jvm
 include_directories(${JNI_INCLUDE_DIRS})
 
 add_library(ZmqExecutorLib SHARED

@@ -15,6 +15,10 @@ private:
 public:
     JavaArrayRefReleaser(jbyteArray jArray, jbyte *nativeArray) : jArray(jArray), nativeArray(nativeArray) {}
 
+    /**
+     * Method to release the ByteArrayElement obtained with GetByteArrayElements.
+     * @param hint pointer to the Releaser object
+     */
     static void release(void *, void *hint) {
         auto releaser = (JavaArrayRefReleaser *) hint;
         releaser->release();
@@ -23,6 +27,7 @@ public:
 
 private:
     void release() {
+        //JNI_ABORT for no copy back of changes since we wont change anything
         JvmManager::attachThread()->ReleaseByteArrayElements(jArray, nativeArray, JNI_ABORT);
     }
 
