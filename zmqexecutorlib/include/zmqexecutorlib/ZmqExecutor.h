@@ -38,7 +38,8 @@ private:
      */
     class CommandExecutor {
         zmqpp::loop loop;
-        std::set<zmqpp::socket *> sockets; //needed to close them automatically on shutdown so context termination doenst block
+        //stores created sockets. Needed to close them automatically on shutdown so context termination doesnt block
+        std::set<std::shared_ptr<zmqpp::socket>> sockets;
         ZmqExecutor &executor;
 
     public:

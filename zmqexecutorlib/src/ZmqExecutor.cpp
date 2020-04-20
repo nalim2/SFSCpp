@@ -75,10 +75,10 @@ std::future<Socket *> ZmqExecutor::CommandExecutor::createReactiveSocket
         });
         auto closer = std::make_shared<std::function<void()>>([=, this]() { //cleanup function
             loop.remove(*zmqSocket);
-            sockets.erase(&*zmqSocket);
+            sockets.erase(zmqSocket);
         });
         auto socket = new Socket(zmqSocket, std::move(closer), executor);
-        sockets.insert(&*zmqSocket);
+        sockets.insert(zmqSocket);
         promise->set_value(socket);
     });
     executor.execute(task); // execute in the correct thread
