@@ -5,27 +5,34 @@
 #include <iostream>
 
 /**
- * Thread safe Queue to store and automatically execute tasks on retreive.
+ * Thread safe Queue to store and automatically execute tasks on retrieve.
  */
 class TaskQueue {
 private:
     boost::lockfree::queue<std::function<void()> *> queue = boost::lockfree::queue<std::function<void()> *>(0);
-    /**
-     * Add a task to the queue. Thread safe. The referenced task will be deleted after popped.
-     */
 public:
-    void add(std::function<void()> *task) {
-        queue.push(task);
+    /**
+     * Add a task to the queue. Thread safe.
+     */
+    void add(std::unique_ptr<std::function<void()>> task) {
+        queue.push(task.release());
     }
 
     /**
-     * Retreives the first task, executes it and then deletes it. Thread Safe.
+     * Retrieves the first task and executes it. Thread safe.
      */
     void execute() {
         std::function<void()> *task;
         queue.pop(task);
-        (*task)();
+        task->operator()();
         delete task;
+    }
+
+    ~TaskQueue() {
+        std::function<void()> *pointer;
+        while (queue.pop(pointer)) {
+            delete pointer;
+        }
     }
 };
 

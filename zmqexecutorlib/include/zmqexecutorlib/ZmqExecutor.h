@@ -101,7 +101,7 @@ private:
      * Queues the task for execution.
      * @param task task to execute async
      */
-    void execute(std::function<void()> *task);
+    void execute(std::unique_ptr<std::function<void()>> task);
 
     /**
      * Initializes a close. Idempotent, so can be called multiple times, but will be executed only once.

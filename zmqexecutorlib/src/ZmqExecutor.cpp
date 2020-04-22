@@ -52,7 +52,7 @@ void ZmqExecutor::CommandExecutor::start() {
         notificationReceiver.close();
         //closes all remaining sockets, so the context.close() call terminates
         // Note that we are still on one thread, so its okay to do this
-        for (auto socket : sockets){
+        for (auto socket : sockets) {
             socket->close();
         }
         std::cout << "loop stopped" << std::endl;
@@ -63,25 +63,25 @@ std::future<Socket *> ZmqExecutor::CommandExecutor::createReactiveSocket
         (zmqpp::socket_type socketType, std::shared_ptr<Inbox> inbox) {
     auto promise = std::make_shared<std::promise<Socket *>>();
     auto future = promise->get_future();
-    //note that this is run inside the loop thread
-    auto task = new std::function<void()>([=, this]() mutable { //mutable because of promise->set_value()
-        //shared pointer just for easy handling, still not thread safe!
-        auto zmqSocket = std::make_shared<zmqpp::socket>(executor.context, socketType);
-        loop.add(*zmqSocket, [=]() { //receive message, then call inbox method
-            auto message = std::make_unique<zmqpp::message>();
-            zmqSocket->receive(*message);
-            inbox->receive(std::move(message));
-            return true;
-        });
-        auto closer = std::make_shared<std::function<void()>>([=, this]() { //cleanup function
-            loop.remove(*zmqSocket);
-            sockets.erase(zmqSocket);
-        });
-        auto socket = new Socket(zmqSocket, std::move(closer), executor);
-        sockets.insert(zmqSocket);
-        promise->set_value(socket);
-    });
-    executor.execute(task); // execute in the correct thread
+    //run inside executor thread for thread safety
+    executor.execute(std::make_unique<std::function<void()>>(
+            [=, this]() mutable { //mutable because of promise->set_value()
+                //shared pointer just for easy handling, still not thread safe!
+                auto zmqSocket = std::make_shared<zmqpp::socket>(executor.context, socketType);
+                loop.add(*zmqSocket, [=]() { //receive message, then call inbox method
+                    auto message = std::make_unique<zmqpp::message>();
+                    zmqSocket->receive(*message);
+                    inbox->receive(std::move(message));
+                    return true;
+                });
+                auto closer = std::make_shared<std::function<void()>>([=, this]() { //cleanup function
+                    loop.remove(*zmqSocket);
+                    sockets.erase(zmqSocket);
+                });
+                auto socket = new Socket(zmqSocket, std::move(closer), executor);
+                sockets.insert(zmqSocket);
+                promise->set_value(socket);
+            }));
     return future;
 }
 
@@ -121,9 +121,9 @@ void ZmqExecutor::start() { //we need to bind socket of commandExecutor, then co
     notificationInjectorNotifier.wait();
 }
 
-void ZmqExecutor::execute(std::function<void()> *task) {
+void ZmqExecutor::execute(std::unique_ptr<std::function<void()>> task) {
     if (!stopRequested) { //do nothing if stopped
-        taskQueue.add(task); //add to queue
+        taskQueue.add(std::move(task)); //add to queue
         taskNotifier.notify(); //then tell notificationInjector to tell commandExecutor about new task
     }
 }
