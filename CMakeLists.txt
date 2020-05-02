@@ -20,6 +20,7 @@ add_library(ZmqExecutorLib SHARED
         zmqexecutorlib/src/ZmqExecutor.cpp
         zmqexecutorlib/src/Socket.cpp)
 target_include_directories(ZmqExecutorLib PUBLIC zmqexecutorlib/include)
+install(TARGETS ZmqExecutorLib)
 
 add_library(JniZmq SHARED
         jnizmq/src/impl/de_unistuttgart_isw_sfsc_commonjava_zmq_reactor_jni_JniReactiveSocket.cpp
@@ -32,3 +33,4 @@ add_library(JniZmq SHARED
         jnizmq/src/impl/JavaShutdownCallbackProxy.h)
 target_include_directories(JniZmq PUBLIC jnizmq)
 target_link_libraries(JniZmq PUBLIC ZmqExecutorLib)
+install(TARGETS JniZmq)
